@@ -79,6 +79,24 @@ describe('Chart.plugins', function() {
 			expect(myplugin.count).toBe(10);
 		});
 
+		it('should call inline plugins with arguments', function() {
+			var myplugin = {
+				count: 0,
+				trigger: function(chart) {
+					myplugin.count = chart.count;
+				}
+			};
+			var chart = {
+				count: 10,
+				options: {
+					plugins: [myplugin]
+				}
+			};
+
+			Chart.plugins.notify('trigger', [chart], chart);
+			expect(myplugin.count).toBe(10);
+		});
+
 		it('should return TRUE if no plugin explicitly returns FALSE', function() {
 			Chart.plugins.register({
 				check: function() {}

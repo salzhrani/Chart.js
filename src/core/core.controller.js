@@ -232,7 +232,7 @@ module.exports = function(Chart) {
 			var me = this;
 
 			// Before init plugin notification
-			Chart.plugins.notify('beforeInit', [me]);
+			Chart.plugins.notify('beforeInit', [me], me);
 
 			me.bindEvents();
 
@@ -247,7 +247,7 @@ module.exports = function(Chart) {
 			me.update();
 
 			// After init plugin notification
-			Chart.plugins.notify('afterInit', [me]);
+			Chart.plugins.notify('afterInit', [me], me);
 
 			return me;
 		},
@@ -289,7 +289,7 @@ module.exports = function(Chart) {
 
 			// Notify any plugins about the resize
 			var newSize = {width: newWidth, height: newHeight};
-			Chart.plugins.notify('resize', [me, newSize]);
+			Chart.plugins.notify('resize', [me, newSize], me);
 
 			// Notify of resize
 			if (me.options.onResize) {
@@ -432,7 +432,7 @@ module.exports = function(Chart) {
 
 		update: function(animationDuration, lazy) {
 			var me = this;
-			Chart.plugins.notify('beforeUpdate', [me]);
+			Chart.plugins.notify('beforeUpdate', [me], me);
 
 			// In case the entire data object changed
 			me.tooltip._data = me.data;
@@ -448,7 +448,7 @@ module.exports = function(Chart) {
 			Chart.layoutService.update(me, me.chart.width, me.chart.height);
 
 			// Apply changes to the datasets that require the scales to have been calculated i.e BorderColor changes
-			Chart.plugins.notify('afterScaleUpdate', [me]);
+			Chart.plugins.notify('afterScaleUpdate', [me], me);
 
 			// Can only reset the new controllers after the scales have been updated
 			helpers.each(newControllers, function(controller) {
@@ -458,7 +458,7 @@ module.exports = function(Chart) {
 			me.updateDatasets();
 
 			// Do this before render so that any plugins that need final scale updates can use it
-			Chart.plugins.notify('afterUpdate', [me]);
+			Chart.plugins.notify('afterUpdate', [me], me);
 
 			if (!me._bufferedRender) {
 				me.render(animationDuration, lazy);
@@ -497,18 +497,18 @@ module.exports = function(Chart) {
 			var me = this;
 			var i, ilen;
 
-			if (Chart.plugins.notify('beforeDatasetsUpdate', [me])) {
+			if (Chart.plugins.notify('beforeDatasetsUpdate', [me], me)) {
 				for (i = 0, ilen = me.data.datasets.length; i < ilen; ++i) {
 					me.getDatasetMeta(i).controller.update();
 				}
 
-				Chart.plugins.notify('afterDatasetsUpdate', [me]);
+				Chart.plugins.notify('afterDatasetsUpdate', [me], me);
 			}
 		},
 
 		render: function(duration, lazy) {
 			var me = this;
-			Chart.plugins.notify('beforeRender', [me]);
+			Chart.plugins.notify('beforeRender', [me], me);
 
 			var animationOptions = me.options.animation;
 			if (animationOptions && ((typeof duration !== 'undefined' && duration !== 0) || (typeof duration === 'undefined' && animationOptions.duration !== 0))) {
@@ -544,7 +544,7 @@ module.exports = function(Chart) {
 			var easingDecimal = ease || 1;
 			me.clear();
 
-			Chart.plugins.notify('beforeDraw', [me, easingDecimal]);
+			Chart.plugins.notify('beforeDraw', [me, easingDecimal], me);
 
 			// Draw all the scales
 			helpers.each(me.boxes, function(box) {
@@ -554,7 +554,7 @@ module.exports = function(Chart) {
 				me.scale.draw();
 			}
 
-			Chart.plugins.notify('beforeDatasetsDraw', [me, easingDecimal]);
+			Chart.plugins.notify('beforeDatasetsDraw', [me, easingDecimal], me);
 
 			// Draw each dataset via its respective controller (reversed to support proper line stacking)
 			helpers.each(me.data.datasets, function(dataset, datasetIndex) {
@@ -563,12 +563,12 @@ module.exports = function(Chart) {
 				}
 			}, me, true);
 
-			Chart.plugins.notify('afterDatasetsDraw', [me, easingDecimal]);
+			Chart.plugins.notify('afterDatasetsDraw', [me, easingDecimal], me);
 
 			// Finally draw the tooltip
 			me.tooltip.transition(easingDecimal).draw();
 
-			Chart.plugins.notify('afterDraw', [me, easingDecimal]);
+			Chart.plugins.notify('afterDraw', [me, easingDecimal], me);
 		},
 
 		// Get the single element that was clicked on
@@ -673,7 +673,7 @@ module.exports = function(Chart) {
 				me.chart.ctx.scale(1 / me.chart.originalDevicePixelRatio, 1 / me.chart.originalDevicePixelRatio);
 			}
 
-			Chart.plugins.notify('destroy', [me]);
+			Chart.plugins.notify('destroy', [me], me);
 
 			delete Chart.instances[me.id];
 		},

@@ -440,6 +440,19 @@ Plugins should derive from Chart.PluginBase and implement the following interfac
 }
 ```
 
+#### Inline Plugins
+Starting with v2.4.0, plugins can be added to individual charts. These plugins support all the same methods as global plugins but are specific to that chart.
+
+When creating the chart, simply add the plugins to `options.plugins` array
+```javascript
+options: {
+	// Inline plugins
+	plugins: [{
+		beforeUpdate: function(chartInstance) { }
+	}]
+}
+```
+
 ### Building Chart.js
 
 Chart.js uses <a href="http://gulpjs.com/" target="_blank">gulp</a> to build the library into a single JavaScript file.
