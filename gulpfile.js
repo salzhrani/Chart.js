@@ -80,32 +80,35 @@ function bowerTask() {
 
 function buildTask() {
 
-  var bundled = browserify('./src/chart.js', { standalone: 'Chart' })
-    .plugin(collapse)
-    .bundle()
-    .pipe(source('Chart.bundle.js'))
-    .pipe(insert.prepend(header))
-    .pipe(streamify(replace('{{ version }}', package.version)))
-    .pipe(gulp.dest(outDir))
-    .pipe(streamify(uglify()))
-    .pipe(insert.prepend(header))
-    .pipe(streamify(replace('{{ version }}', package.version)))
-    .pipe(streamify(concat('Chart.bundle.min.js')))
+  return gulp.src('./src/chart.js')
+    .pipe(babel())
     .pipe(gulp.dest(outDir));
+  // var bundled = browserify('./src/chart.js', { standalone: 'Chart' })
+  //   .plugin(collapse)
+  //   .bundle()
+  //   .pipe(source('Chart.bundle.js'))
+  //   .pipe(insert.prepend(header))
+  //   .pipe(streamify(replace('{{ version }}', package.version)))
+  //   .pipe(gulp.dest(outDir))
+  //   .pipe(streamify(uglify()))
+  //   .pipe(insert.prepend(header))
+  //   .pipe(streamify(replace('{{ version }}', package.version)))
+  //   .pipe(streamify(concat('Chart.bundle.min.js')))
+  //   .pipe(gulp.dest(outDir));
 
-  var nonBundled = browserify('./src/chart.js', { standalone: 'Chart' })
-    .ignore('moment')
-    .plugin(collapse)
-    .bundle()
-    .pipe(source('Chart.js'))
-    .pipe(insert.prepend(header))
-    .pipe(streamify(replace('{{ version }}', package.version)))
-    .pipe(gulp.dest(outDir))
-    .pipe(streamify(uglify()))
-    .pipe(insert.prepend(header))
-    .pipe(streamify(replace('{{ version }}', package.version)))
-    .pipe(streamify(concat('Chart.min.js')))
-    .pipe(gulp.dest(outDir));
+  // var nonBundled = browserify('./src/chart.js', { standalone: 'Chart' })
+  //   .ignore('moment')
+  //   .plugin(collapse)
+  //   .bundle()
+  //   .pipe(source('Chart.js'))
+  //   .pipe(insert.prepend(header))
+  //   .pipe(streamify(replace('{{ version }}', package.version)))
+  //   .pipe(gulp.dest(outDir))
+  //   .pipe(streamify(uglify()))
+  //   .pipe(insert.prepend(header))
+  //   .pipe(streamify(replace('{{ version }}', package.version)))
+  //   .pipe(streamify(concat('Chart.min.js')))
+  //   .pipe(gulp.dest(outDir));
 
   return merge(bundled, nonBundled);
 
