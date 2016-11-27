@@ -1,4 +1,3 @@
-'use strict';
 import {extend, each, clone, isNumber} from './core.helpers';
 
 export default class Element {

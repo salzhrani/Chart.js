@@ -1,11 +1,11 @@
 /* global window: false */
 'use strict';
-import Chart from './core';
 import Element from './core.element';
+import defaults from './core/core.defaults';
 
 import {noop, findIndex, requestAnimFrame} from './core.helpers';
 
-Chart.defaults.global.animation = {
+defaults.global.animation = {
 	duration: 1000,
 	easing: 'easeOutQuart',
 	onProgress: noop,

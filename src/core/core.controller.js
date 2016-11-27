@@ -17,6 +17,9 @@ import {getStyle,
 	removeResizeListener,
 	bindEvents,
 	arrayEquals} from './core.helpers';
+import { plugins } from './core.plugin';
+import defaults from './core/core.defaults';
+import * as controllers from '../controllers';
 
 // Create a dictionary of chart types, to allow for extension of existing types
 // Chart.types = {};
@@ -169,8 +172,8 @@ function initConfig(config) {
 	data.labels = data.labels || [];
 
 	config.options = configMerge(
-		Chart.defaults.global,
-		Chart.defaults[config.type],
+		defaults.global,
+		defaults[config.type],
 		config.options || {});
 
 	return config;
@@ -242,7 +245,7 @@ export default class Controller {
 		var me = this;
 
 		// Before init plugin notification
-		Chart.plugins.notify('beforeInit', [me]);
+		plugins.notify('beforeInit', [me]);
 
 		me.bindEvents();
 
@@ -257,7 +260,7 @@ export default class Controller {
 		me.update();
 
 		// After init plugin notification
-		Chart.plugins.notify('afterInit', [me]);
+		plugins.notify('afterInit', [me]);
 
 		return me;
 	}
@@ -299,7 +302,7 @@ export default class Controller {
 
 		// Notify any plugins about the resize
 		var newSize = {width: newWidth, height: newHeight};
-		Chart.plugins.notify('resize', [me, newSize]);
+		plugins.notify('resize', [me, newSize]);
 
 		// Notify of resize
 		if (me.options.onResize) {
@@ -402,7 +405,7 @@ export default class Controller {
 			if (meta.controller) {
 				meta.controller.updateIndex(datasetIndex);
 			} else {
-				meta.controller = new Chart.controllers[meta.type](me, datasetIndex);
+				meta.controller = new controllers[meta.type](me, datasetIndex);
 				newControllers.push(meta.controller);
 			}
 		}, me);
@@ -442,7 +445,7 @@ export default class Controller {
 
 	update(animationDuration, lazy) {
 		var me = this;
-		Chart.plugins.notify('beforeUpdate', [me]);
+		plugins.notify('beforeUpdate', [me]);
 
 		// In case the entire data object changed
 		me.tooltip._data = me.data;
@@ -458,7 +461,7 @@ export default class Controller {
 		Chart.layoutService.update(me, me.chart.width, me.chart.height);
 
 		// Apply changes to the datasets that require the scales to have been calculated i.e BorderColor changes
-		Chart.plugins.notify('afterScaleUpdate', [me]);
+		plugins.notify('afterScaleUpdate', [me]);
 
 		// Can only reset the new controllers after the scales have been updated
 		each(newControllers, function(controller) {
@@ -468,7 +471,7 @@ export default class Controller {
 		me.updateDatasets();
 
 		// Do this before render so that any plugins that need final scale updates can use it
-		Chart.plugins.notify('afterUpdate', [me]);
+		plugins.notify('afterUpdate', [me]);
 
 		if (me._bufferedRender) {
 			me._bufferedRequest = {
@@ -512,18 +515,18 @@ export default class Controller {
 		var me = this;
 		var i, ilen;
 
-		if (Chart.plugins.notify('beforeDatasetsUpdate', [me])) {
+		if (plugins.notify('beforeDatasetsUpdate', [me])) {
 			for (i = 0, ilen = me.data.datasets.length; i < ilen; ++i) {
 				me.getDatasetMeta(i).controller.update();
 			}
 
-			Chart.plugins.notify('afterDatasetsUpdate', [me]);
+			plugins.notify('afterDatasetsUpdate', [me]);
 		}
 	}
 
 	render(duration, lazy) {
 		var me = this;
-		Chart.plugins.notify('beforeRender', [me]);
+		plugins.notify('beforeRender', [me]);
 
 		var animationOptions = me.options.animation;
 		if (animationOptions && ((typeof duration !== 'undefined' && duration !== 0) || (typeof duration === 'undefined' && animationOptions.duration !== 0))) {
@@ -559,7 +562,7 @@ export default class Controller {
 		var easingDecimal = ease || 1;
 		me.clear();
 
-		Chart.plugins.notify('beforeDraw', [me, easingDecimal]);
+		plugins.notify('beforeDraw', [me, easingDecimal]);
 
 		// Draw all the scales
 		each(me.boxes, function(box) {
@@ -569,7 +572,7 @@ export default class Controller {
 			me.scale.draw();
 		}
 
-		Chart.plugins.notify('beforeDatasetsDraw', [me, easingDecimal]);
+		plugins.notify('beforeDatasetsDraw', [me, easingDecimal]);
 
 		// Draw each dataset via its respective controller (reversed to support proper line stacking)
 		each(me.data.datasets, function(dataset, datasetIndex) {
@@ -578,12 +581,12 @@ export default class Controller {
 			}
 		}, me, true);
 
-		Chart.plugins.notify('afterDatasetsDraw', [me, easingDecimal]);
+		plugins.notify('afterDatasetsDraw', [me, easingDecimal]);
 
 		// Finally draw the tooltip
 		me.tooltip.transition(easingDecimal).draw();
 
-		Chart.plugins.notify('afterDraw', [me, easingDecimal]);
+		plugins.notify('afterDraw', [me, easingDecimal]);
 	}
 
 	// Get the single element that was clicked on
@@ -688,7 +691,7 @@ export default class Controller {
 			me.chart.ctx.scale(1 / me.chart.originalDevicePixelRatio, 1 / me.chart.originalDevicePixelRatio);
 		}
 
-		Chart.plugins.notify('destroy', [me]);
+		plugins.notify('destroy', [me]);
 
 		delete Chart.instances[me.id];
 	}

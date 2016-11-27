@@ -19,6 +19,7 @@ var merge = require('merge-stream');
 var collapse = require('bundle-collapser/plugin');
 var argv  = require('yargs').argv
 var package = require('./package.json');
+var babel = require('gulp-babel');
 
 var srcDir = './src/';
 var outDir = './dist/';
@@ -42,8 +43,9 @@ var testFiles = [
   './test/*.js'
 ];
 
+gulp.task('transpile', transpile);
 gulp.task('bower', bowerTask);
-gulp.task('build', buildTask);
+gulp.task('build', ['transpile'], buildTask);
 gulp.task('package', packageTask);
 gulp.task('coverage', coverageTask);
 gulp.task('watch', watchTask);
@@ -78,37 +80,43 @@ function bowerTask() {
     .pipe(gulp.dest('./'));
 }
 
-function buildTask() {
-
-  return gulp.src('./src/chart.js')
+function transpile() {
+ return gulp.src('./src/chart.js')
     .pipe(babel())
     .pipe(gulp.dest(outDir));
-  // var bundled = browserify('./src/chart.js', { standalone: 'Chart' })
-  //   .plugin(collapse)
-  //   .bundle()
-  //   .pipe(source('Chart.bundle.js'))
-  //   .pipe(insert.prepend(header))
-  //   .pipe(streamify(replace('{{ version }}', package.version)))
-  //   .pipe(gulp.dest(outDir))
-  //   .pipe(streamify(uglify()))
-  //   .pipe(insert.prepend(header))
-  //   .pipe(streamify(replace('{{ version }}', package.version)))
-  //   .pipe(streamify(concat('Chart.bundle.min.js')))
-  //   .pipe(gulp.dest(outDir));
+}
 
-  // var nonBundled = browserify('./src/chart.js', { standalone: 'Chart' })
-  //   .ignore('moment')
-  //   .plugin(collapse)
-  //   .bundle()
-  //   .pipe(source('Chart.js'))
-  //   .pipe(insert.prepend(header))
-  //   .pipe(streamify(replace('{{ version }}', package.version)))
-  //   .pipe(gulp.dest(outDir))
-  //   .pipe(streamify(uglify()))
-  //   .pipe(insert.prepend(header))
-  //   .pipe(streamify(replace('{{ version }}', package.version)))
-  //   .pipe(streamify(concat('Chart.min.js')))
-  //   .pipe(gulp.dest(outDir));
+function buildTask() {
+
+ 
+  var bundled = browserify('./src/chart.js', { standalone: 'Chart' })
+    .transform("babelify", {presets: ["es2015"], plugins: ['transform-class-properties']})
+    .plugin(collapse)
+    .bundle()
+    .pipe(source('Chart.bundle.js'))
+    .pipe(insert.prepend(header))
+    .pipe(streamify(replace('{{ version }}', package.version)))
+    .pipe(gulp.dest(outDir))
+    .pipe(streamify(uglify()))
+    .pipe(insert.prepend(header))
+    .pipe(streamify(replace('{{ version }}', package.version)))
+    .pipe(streamify(concat('Chart.bundle.min.js')))
+    .pipe(gulp.dest(outDir));
+
+  var nonBundled = browserify('./src/chart.js', { standalone: 'Chart' })
+    .transform("babelify", {presets: ["es2015"], plugins: ['transform-class-properties']})
+    .ignore('moment')
+    .plugin(collapse)
+    .bundle()
+    .pipe(source('Chart.js'))
+    .pipe(insert.prepend(header))
+    .pipe(streamify(replace('{{ version }}', package.version)))
+    .pipe(gulp.dest(outDir))
+    .pipe(streamify(uglify()))
+    .pipe(insert.prepend(header))
+    .pipe(streamify(replace('{{ version }}', package.version)))
+    .pipe(streamify(concat('Chart.min.js')))
+    .pipe(gulp.dest(outDir));
 
   return merge(bundled, nonBundled);
 

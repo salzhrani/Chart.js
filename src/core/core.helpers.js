@@ -6,7 +6,7 @@
 import chartColor from 'chartjs-color';
 import scaleService from './core.scaleService';
 import Chart from './core';
-
+import defaults from './core/core.defaults';
 	// -- Basic js utility methods
 export const isArray = Array.isArray?
 	function(obj) {
@@ -943,7 +943,7 @@ export const color = function(c) {
 
 	/* global CanvasGradient */
 	if (c instanceof CanvasGradient) {
-		return chartColor(Chart.defaults.global.defaultColor);
+		return chartColor(defaults.global.defaultColor);
 	}
 
 	return chartColor(c);

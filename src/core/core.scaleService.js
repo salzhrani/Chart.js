@@ -1,6 +1,7 @@
 'use strict';
-import {scaleMerge, extend, clone, each} from './code.helpers';
-import Chart from './core';
+import {scaleMerge, extend, clone, each} from './core.helpers';
+import defaults as chartDefaults from './core.defaults';
+import layoutService from './core.layoutService';
 
 export default {
 	// Scale registration object. Extensions can register new scale types (such as log or DB scales) and then
@@ -20,7 +21,7 @@ export default {
 	},
 	getScaleDefaults: function(type) {
 		// Return the scale defaults merged with the global settings so that we always use the latest ones
-		return this.defaults.hasOwnProperty(type) ? scaleMerge(Chart.defaults.scale, this.defaults[type]) : {};
+		return this.defaults.hasOwnProperty(type) ? scaleMerge(chartDefaults.scale, this.defaults[type]) : {};
 	},
 	updateScaleDefaults: function(type, additions) {
 		var defaults = this.defaults;
@@ -31,7 +32,7 @@ export default {
 	addScalesToLayout: function(chartInstance) {
 		// Adds each scale to the chart.boxes array to be sized accordingly
 		each(chartInstance.scales, function(scale) {
-			Chart.layoutService.addBox(chartInstance, scale);
+			layoutService.addBox(chartInstance, scale);
 		});
 	}
 };

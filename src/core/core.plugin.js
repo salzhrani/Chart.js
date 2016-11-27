@@ -1,5 +1,5 @@
 'use strict';
-import Element from './core.'
+import Element from './core.element';
 
 /**
  * The plugin service singleton

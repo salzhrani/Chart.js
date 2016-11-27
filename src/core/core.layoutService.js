@@ -3,7 +3,7 @@ import {where, each, findNextWhere} from './core.helpers';
 // The layout service is very self explanatory.  It's responsible for the layout within a chart.
 // Scales, Legends and Plugins all rely on the layout service and can easily register to be placed anywhere they need
 // It is this service's responsibility of carrying out that layout.
-export const layoutService = {
+export default {
 	defaults: {},
 
 	// Register a box to a chartInstance. A box is simply a reference to an object that requires layout. eg. Scales, Legend, Plugins.

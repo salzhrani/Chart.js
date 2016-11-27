@@ -8,8 +8,11 @@ import {
 	each,
 	fontString,
 	getRelativePosition} from './core.helpers';
+import { plugins } from './core.plugin';
+import { layoutService } from './core.layoutService';
+import defaults from './core/core.defaults';
 
-Chart.defaults.global.legend = {
+defaults.global.legend = {
 
 	display: true,
 	position: 'top',
@@ -200,7 +203,7 @@ export default class Legend extends Element {
 
 		var ctx = me.ctx;
 
-		var globalDefault = Chart.defaults.global,
+		var globalDefault = defaults.global,
 			itemOrDefault = getValueOrDefault,
 			fontSize = itemOrDefault(labelOpts.fontSize, globalDefault.defaultFontSize),
 			fontStyle = itemOrDefault(labelOpts.fontStyle, globalDefault.defaultFontStyle),
@@ -314,7 +317,7 @@ export default class Legend extends Element {
 		var me = this;
 		var opts = me.options;
 		var labelOpts = opts.labels;
-		var globalDefault = Chart.defaults.global,
+		var globalDefault = defaults.global,
 			lineDefault = globalDefault.elements.line,
 			legendWidth = me.width,
 			lineWidths = me.lineWidths;
@@ -502,19 +505,19 @@ export default class Legend extends Element {
 }
 
 // Register the legend plugin
-Chart.plugins.register({
+plugins.register({
 	beforeInit(chartInstance) {
 		var opts = chartInstance.options;
 		var legendOpts = opts.legend;
 
 		if (legendOpts) {
-			chartInstance.legend = new Chart.Legend({
+			chartInstance.legend = new Legend({
 				ctx: chartInstance.chart.ctx,
 				options: legendOpts,
 				chart: chartInstance
 			});
 
-			Chart.layoutService.addBox(chartInstance, chartInstance.legend);
+			layoutService.addBox(chartInstance, chartInstance.legend);
 		}
 	}
 });

@@ -1,11 +1,6 @@
-'use strict';
+import Chart from '../core/core';
 
-module.exports = function(Chart) {
-
-	Chart.Radar = function(context, config) {
-		config.type = 'radar';
-
-		return new Chart(context, config);
-	};
-
+export default (context, config) => {
+	config.type = 'radar';
+	return new Chart(context, config);
 };
