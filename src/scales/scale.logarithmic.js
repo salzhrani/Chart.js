@@ -124,7 +124,7 @@ export default class LogarithmicScale extends Scale {
 			min: tickOpts.min,
 			max: tickOpts.max
 		};
-		var ticks = me.ticks = Chart.Ticks.generators.logarithmic(generationOptions, me);
+		var ticks = me.ticks = Ticks.generators.logarithmic(generationOptions, me);
 
 		if (!me.isHorizontal()) {
 			// We are in a vertical orientation. The top value is the highest. So reverse the array
@@ -149,7 +149,7 @@ export default class LogarithmicScale extends Scale {
 	convertTicksToLabels() {
 		this.tickValues = this.ticks.slice();
 
-		Chart.Scale.prototype.convertTicksToLabels.call(this);
+		Scale.prototype.convertTicksToLabels.call(this);
 	}
 	// Get the correct tooltip label
 	getLabelForIndex(index, datasetIndex) {

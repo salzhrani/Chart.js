@@ -1,6 +1,6 @@
 'use strict';
 import {scaleMerge, extend, clone, each} from './core.helpers';
-import defaults as chartDefaults from './core.defaults';
+import chartDefaults from './core.defaults';
 import layoutService from './core.layoutService';
 
 export default {

@@ -1,6 +1,6 @@
 import Ticks from './core.ticks';
 import Element from './core.element';
-import defaults from './core/core.defaults';
+import defaults from './core.defaults';
 import {
 	callCallback,
 	extend,

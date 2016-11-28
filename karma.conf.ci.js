@@ -10,10 +10,14 @@ module.exports = function(config) {
 		frameworks: ['browserify', 'jasmine'],
 		reporters: ['progress', 'html'],
 		preprocessors: {
-			'src/**/*.js': ['browserify']
+			'src/**/*.js': ['browserify'],
+			'test/**/*.js': ['browserify']
 		},
 		browserify: {
-			debug: true
+			debug: true,
+			transform: [
+				['babelify', {presets: ['es2015'], plugins: ['transform-class-properties']}]
+			]
 		}
 	};
 

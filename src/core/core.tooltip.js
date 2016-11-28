@@ -10,8 +10,9 @@ import {
 	getRelativePosition,
 	distanceBetweenPoints,
 } from './core.helpers';
-import Chart from './core';
 import Element from './core.element';
+import defaults from './core.defaults';
+
 /**
  * Helper method to merge the opacity into a color
 	*/
@@ -20,7 +21,7 @@ function mergeOpacity(colorString, opacity) {
 	return colorVal.alpha(opacity * colorVal.alpha()).rgbaString();
 }
 
-Chart.defaults.global.tooltips = {
+defaults.global.tooltips = {
 	enabled: true,
 	custom: null,
 	mode: 'nearest',
@@ -137,7 +138,7 @@ function createTooltipItem(element) {
  * @param tooltipOpts {Object} the tooltip options
  */
 function getBaseModel(tooltipOpts) {
-	var globalDefaults = Chart.defaults.global;
+	var globalDefaults = defaults.global;
 
 	return {
 		// Positioning
@@ -372,8 +373,8 @@ function getBackgroundPoint(vm, size, alignment) {
 }
 
 export default class Tooltip extends Element {
-	constructor() {
-		super();
+	constructor(options) {
+		super(options);
 		this._model = getBaseModel(this._options);
 	}
 
@@ -486,7 +487,7 @@ export default class Tooltip extends Element {
 			model.opacity = 1;
 
 			var labelColors = [];
-			tooltipPosition = Chart.Tooltip.positioners[opts.position](active, me._eventPosition);
+			tooltipPosition = Tooltip.positioners[opts.position](active, me._eventPosition);
 
 			var tooltipItems = [];
 			for (i = 0, len = active.length; i < len; ++i) {

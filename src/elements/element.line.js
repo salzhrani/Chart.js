@@ -1,5 +1,6 @@
-import { previousItem } from '../core/core.helpers';
-import Chart from '../core/core';
+import {
+	previousItem
+} from '../core/core.helpers';
 import Element from '../core/core.element';
 import defaults from '../core/core.defaults';
 

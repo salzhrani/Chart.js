@@ -2,7 +2,6 @@ import {
 	each,
 	getValueAtIndexOrDefault,
 	extend,
-	noop,
 } from '../core/core.helpers';
 import Arc from '../elements/element.arc';
 import DatasetController from '../core/core.datasetController';
@@ -110,7 +109,7 @@ export default class PolarAreaController extends DatasetController {
 
 	dataElementType = Arc
 
-	linkScales = noop
+	linkScales() {}
 
 	update(reset) {
 		var me = this;

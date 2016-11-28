@@ -2,14 +2,12 @@ import Moment from 'moment';
 import {
 	getValueOrDefault,
 	each,
-	min,
 	max,
 	fontString,
 	toRadians,
 	isArray,
 } from '../core/core.helpers';
 import Scale from '../core/core.scale';
-import Ticks from '../core/core.ticks';
 import scaleService from '../core/core.scaleService';
 import defaults from '../core/core.defaults';
 
@@ -78,11 +76,11 @@ var defaultConfig = {
 };
 
 export default class TimeScale extends Scale {
-	constructor() {
+	constructor(options) {
 		if (!moment) {
 			throw new Error('Chart.js - Moment.js could not be found! You must include it before Chart.js to use the time scale. Download at https://momentjs.com');
 		}
-		super();
+		super(options);
 	}
 	getLabelMoment(datasetIndex, index) {
 		if (datasetIndex === null || index === null) {

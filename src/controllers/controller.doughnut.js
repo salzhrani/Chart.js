@@ -4,7 +4,6 @@ import {
 	extend,
 	isArray,
 	clone,
-	noop,
 } from '../core/core.helpers';
 import Arc from '../elements/element.arc';
 import DatasetController from '../core/core.datasetController';
@@ -135,7 +134,7 @@ export class DoughnutController extends DatasetController {
 
 	dataElementType = Arc
 
-	linkScales = noop
+	linkScales() {}
 
 	// Get index of the dataset in relation to the visible datasets. This allows determining the inner and outer radius correctly
 	getRingIndex(datasetIndex) {

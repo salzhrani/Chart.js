@@ -1,4 +1,9 @@
-import { each, min, max, getValueOrDefault } from '../core/core.helpers';
+import {
+	each,
+	min,
+	max,
+	getValueOrDefault
+} from '../core/core.helpers';
 import LinearScaleBase from './scale.linearbase';
 import Ticks from '../core/core.ticks';
 import scaleService from '../core/core.scaleService';
@@ -149,7 +154,7 @@ export default class LinearScale extends LinearScaleBase {
 		innerDimension = me.height - (me.paddingTop + paddingBottom);
 		pixel = (me.bottom - paddingBottom) - (innerDimension / range * (rightValue - start));
 		return Math.round(pixel);
-	},
+	}
 	getValueForPixel(pixel) {
 		var me = this;
 		var isHorizontal = me.isHorizontal();

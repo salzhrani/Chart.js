@@ -1,4 +1,4 @@
-import {extend, each, clone, isNumber} from './core.helpers';
+import {extend, each, clone, isNumber, color} from './core.helpers';
 
 export default class Element {
 	constructor(configuration) {
@@ -50,8 +50,8 @@ export default class Element {
 			// Color transitions if possible
 			} else if (typeof value === 'string') {
 				try {
-					var color = color(me._model[key]).mix(color(me._start[key]), ease);
-					me._view[key] = color.rgbString();
+					var colorVal = color(me._model[key]).mix(color(me._start[key]), ease);
+					me._view[key] = colorVal.rgbString();
 				} catch (err) {
 					me._view[key] = value;
 				}

@@ -50,8 +50,8 @@ export default class LinearScaleBase extends Scale {
 			}
 		}
 	}
-	getTickLimit = noop
-	handleDirectionalChanges = noop
+	getTickLimit() {}
+	handleDirectionalChanges() {}
 
 	buildTicks() {
 		var me = this;
@@ -74,7 +74,6 @@ export default class LinearScaleBase extends Scale {
 		var ticks = me.ticks = Ticks.generators.linear(numericGeneratorOptions, me);
 
 		me.handleDirectionalChanges();
-
 		// At this point, we need to update our max and min given the tick values since we have expanded the
 		// range of the scale
 		me.max = max(ticks);

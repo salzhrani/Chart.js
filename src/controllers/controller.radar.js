@@ -1,7 +1,6 @@
 import {
 	getValueOrDefault,
 	getValueAtIndexOrDefault,
-	noop,
 	splineCurve,
 	previousItem,
 	nextItem,
@@ -33,7 +32,7 @@ export default class RadarController extends DatasetController {
 
 	dataElementType = Point
 
-	linkScales = noop
+	linkScales() {}
 
 	update(reset) {
 		var me = this;

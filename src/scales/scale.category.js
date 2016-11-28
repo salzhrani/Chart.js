@@ -1,4 +1,6 @@
-import { indexOf } from '../core/core.helpers';
+import {
+	indexOf
+} from '../core/core.helpers';
 import Scale from '../core/core.scale';
 import scaleService from '../core/core.scaleService';
 
@@ -7,7 +9,7 @@ var defaultConfig = {
 	position: 'bottom'
 };
 
-class DatasetScale extends Scale {
+export default class DatasetScale extends Scale {
 	/**
 	* Internal function to get the correct labels. If data.xLabels or data.yLabels are defined, use those
 	* else fall back to data.labels

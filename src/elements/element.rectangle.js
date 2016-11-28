@@ -1,4 +1,3 @@
-import Chart from '../core/core';
 import Element from '../core/core.element';
 import defaults from '../core/core.defaults';
 

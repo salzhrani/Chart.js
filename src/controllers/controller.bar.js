@@ -5,6 +5,7 @@ import {
 } from '../core/core.helpers';
 import defaults from '../core/core.defaults';
 import Rectangle from '../elements/element.rectangle';
+import DatasetController from '../core/core.datasetController';
 
 defaults.bar = {
 	hover: {

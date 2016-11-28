@@ -75,24 +75,25 @@ function unlistenArrayEvents(array, listener) {
 // Base class for all dataset controllers (line, bar, etc)
 export default class DatasetController {
 	constructor(chart, datasetIndex) {
-		this.initialize(chart, datasetIndex);
+		// this.initialize(chart, datasetIndex);
+		var me = this;
+		me.chart = chart;
+		me.index = datasetIndex;
 		/**
 		 * Element type used to generate a meta dataset (e.g. Chart.element.Line).
 		 * @type {Chart.core.element}
 		 */
-		this.datasetElementType = null;
+		me.datasetElementType = null;
 
 		/**
 		 * Element type used to generate a meta data (e.g. Chart.element.Point).
 		 * @type {Chart.core.element}
 		 */
-		this.dataElementType = null;
+		me.dataElementType = null;
 	}
 
-	initialize(chart, datasetIndex) {
+	initialize() {
 		var me = this;
-		me.chart = chart;
-		me.index = datasetIndex;
 		me.linkScales();
 		me.addElements();
 	}

@@ -1,4 +1,3 @@
-'use strict';
 
 export const drawPoint = function(ctx, pointStyle, radius, x, y) {
 	var type, edgeLength, xOffset, yOffset, height, size;

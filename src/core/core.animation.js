@@ -1,7 +1,6 @@
 /* global window: false */
-'use strict';
 import Element from './core.element';
-import defaults from './core/core.defaults';
+import defaults from './core.defaults';
 
 import {noop, findIndex, requestAnimFrame} from './core.helpers';
 

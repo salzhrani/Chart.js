@@ -8,7 +8,7 @@ import {
 } from '../core/core.helpers';
 import Ticks from '../core/core.ticks';
 import scaleService from '../core/core.scaleService';
-import LinearScaleBase from './scale.baselinear';
+import LinearScaleBase from './scale.linearbase';
 import defaults from '../core/core.defaults';
 
 
@@ -56,7 +56,7 @@ var defaultConfig = {
 	}
 };
 
-export default class LinearRadialScale extends LinearScaleBase {
+export default class RadialLinearScale extends LinearScaleBase {
 	getValueCount() {
 		return this.chart.data.labels.length;
 	}
@@ -419,5 +419,5 @@ export default class LinearRadialScale extends LinearScaleBase {
 		}
 	}
 }
-scaleService.registerScaleType('radialLinear', LinearRadialScale, defaultConfig);
+scaleService.registerScaleType('radialLinear', RadialLinearScale, defaultConfig);
 

@@ -1,5 +1,3 @@
-'use strict';
-import Chart from './core';
 import Element from './core.element';
 import {
 	extend,
@@ -8,9 +6,14 @@ import {
 	each,
 	fontString,
 	getRelativePosition} from './core.helpers';
-import { plugins } from './core.plugin';
-import { layoutService } from './core.layoutService';
-import defaults from './core/core.defaults';
+import {
+	plugins
+} from './core.plugin';
+import layoutService from './core.layoutService';
+import defaults from './core.defaults';
+import {
+	drawPoint
+} from './core.canvasHelpers';
 
 defaults.global.legend = {
 
@@ -374,7 +377,7 @@ export default class Legend extends Element {
 					var centerY = y + offSet;
 
 					// Draw pointStyle as legend symbol
-					Chart.canvasHelpers.drawPoint(ctx, legendItem.pointStyle, radius, centerX, centerY);
+					drawPoint(ctx, legendItem.pointStyle, radius, centerX, centerY);
 				} else {
 					// Draw box as legend symbol
 					if (!isLineWidthZero) {
@@ -509,7 +512,6 @@ plugins.register({
 	beforeInit(chartInstance) {
 		var opts = chartInstance.options;
 		var legendOpts = opts.legend;
-
 		if (legendOpts) {
 			chartInstance.legend = new Legend({
 				ctx: chartInstance.chart.ctx,

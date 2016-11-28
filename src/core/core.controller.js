@@ -1,13 +1,13 @@
 'use strict';
 
 import Chart from './core';
+import './core.legend';
 import {getStyle,
 	addResizeListener,
 	each,
 	configMerge,
 	uid,
 	retinaScale,
-	extend,
 	clear,
 	getMaximumWidth,
 	getMaximumHeight,
@@ -17,10 +17,15 @@ import {getStyle,
 	removeResizeListener,
 	bindEvents,
 	arrayEquals} from './core.helpers';
-import { plugins } from './core.plugin';
-import defaults from './core/core.defaults';
+import {plugins} from './core.plugin';
+import defaults from './core.defaults';
 import * as controllers from '../controllers';
-
+import scaleService from './core.scaleService';
+import layoutService from './core.layoutService';
+import Tooltip from './core.tooltip';
+import Interaction from './core.interaction';
+import Animation, {animationService} from './core.animation';
+import '../scales';
 // Create a dictionary of chart types, to allow for extension of existing types
 // Chart.types = {};
 
@@ -186,7 +191,6 @@ function initConfig(config) {
 export default class Controller {
 	constructor(item, config, instance) {
 		var me = this;
-
 		config = initConfig(config);
 
 		var context = acquireContext(item, config);
@@ -272,7 +276,7 @@ export default class Controller {
 
 	stop() {
 		// Stops any current animation loop occurring
-		Chart.animationService.cancelAnimation(this);
+		animationService.cancelAnimation(this);
 		return this;
 	}
 
@@ -341,7 +345,6 @@ export default class Controller {
 		var options = me.options;
 		var scales = me.scales = {};
 		var items = [];
-
 		if (options.scales) {
 			items = items.concat(
 				(options.scales.xAxes || []).map(function(xAxisOptions) {
@@ -360,7 +363,7 @@ export default class Controller {
 		each(items, function(item) {
 			var scaleOptions = item.options;
 			var scaleType = getValueOrDefault(scaleOptions.type, item.dtype);
-			var scaleClass = Chart.scaleService.getScaleConstructor(scaleType);
+			var scaleClass = scaleService.getScaleConstructor(scaleType);
 			if (!scaleClass) {
 				return;
 			}
@@ -382,11 +385,11 @@ export default class Controller {
 			}
 		});
 
-		Chart.scaleService.addScalesToLayout(this);
+		scaleService.addScalesToLayout(this);
 	}
 
 	updateLayout() {
-		Chart.layoutService.update(this, this.chart.width, this.chart.height);
+		layoutService.update(this, this.chart.width, this.chart.height);
 	}
 
 	buildOrUpdateControllers() {
@@ -406,6 +409,7 @@ export default class Controller {
 				meta.controller.updateIndex(datasetIndex);
 			} else {
 				meta.controller = new controllers[meta.type](me, datasetIndex);
+				meta.controller.initialize();
 				newControllers.push(meta.controller);
 			}
 		}, me);
@@ -458,7 +462,7 @@ export default class Controller {
 			me.getDatasetMeta(datasetIndex).controller.buildOrUpdateElements();
 		}, me);
 
-		Chart.layoutService.update(me, me.chart.width, me.chart.height);
+		layoutService.update(me, me.chart.width, me.chart.height);
 
 		// Apply changes to the datasets that require the scales to have been calculated i.e BorderColor changes
 		plugins.notify('afterScaleUpdate', [me]);
@@ -530,7 +534,7 @@ export default class Controller {
 
 		var animationOptions = me.options.animation;
 		if (animationOptions && ((typeof duration !== 'undefined' && duration !== 0) || (typeof duration === 'undefined' && animationOptions.duration !== 0))) {
-			var animation = new Chart.Animation();
+			var animation = new Animation();
 			animation.numSteps = (duration || animationOptions.duration) / 16.66; // 60 fps
 			animation.easing = animationOptions.easing;
 
@@ -547,7 +551,7 @@ export default class Controller {
 			animation.onAnimationProgress = animationOptions.onProgress;
 			animation.onAnimationComplete = animationOptions.onComplete;
 
-			Chart.animationService.addAnimation(me, animation, duration, lazy);
+			animationService.addAnimation(me, animation, duration, lazy);
 		} else {
 			me.draw();
 			if (animationOptions && animationOptions.onComplete && animationOptions.onComplete.call) {
@@ -592,19 +596,19 @@ export default class Controller {
 	// Get the single element that was clicked on
 	// @return : An object containing the dataset index and element index of the matching element. Also contains the rectangle that was draw
 	getElementAtEvent(e) {
-		return Chart.Interaction.modes.single(this, e);
+		return Interaction.modes.single(this, e);
 	}
 
 	getElementsAtEvent(e) {
-		return Chart.Interaction.modes.label(this, e, {intersect: true});
+		return Interaction.modes.label(this, e, {intersect: true});
 	}
 
 	getElementsAtXAxis(e) {
-		return Chart.Interaction.modes['x-axis'](this, e, {intersect: true});
+		return Interaction.modes['x-axis'](this, e, {intersect: true});
 	}
 
 	getElementsAtEventForMode(e, mode, options) {
-		var method = Chart.Interaction.modes[mode];
+		var method = Interaction.modes[mode];
 		if (typeof method === 'function') {
 			return method(this, e, options);
 		}
@@ -613,7 +617,7 @@ export default class Controller {
 	}
 
 	getDatasetAtEvent(e) {
-		return Chart.Interaction.modes.dataset(this, e);
+		return Interaction.modes.dataset(this, e);
 	}
 
 	getDatasetMeta(datasetIndex) {
@@ -702,13 +706,13 @@ export default class Controller {
 
 	initToolTip() {
 		var me = this;
-		me.tooltip = new Chart.Tooltip({
+		me.tooltip = new Tooltip({
 			_chart: me.chart,
 			_chartInstance: me,
 			_data: me.data,
 			_options: me.options.tooltips
 		}, me);
-		me.tooltip.initialize();
+		// me.tooltip.initialize();
 	}
 
 	bindEvents() {

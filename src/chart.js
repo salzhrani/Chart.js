@@ -48,6 +48,12 @@
 // require('./charts/Chart.Radar')(Chart);
 // require('./charts/Chart.Scatter')(Chart);
 import Chart from './core/core';
+import * as helpers from './core/core.helpers';
+import defaults from './core/core.defaults';
+import * as elements from './elements';
+Chart.helpers = helpers;
+Chart.elements = elements;
+Chart.defaults = defaults;
 // window.Chart = Chart.default;
 // export default Chart;
 module.exports = Chart;

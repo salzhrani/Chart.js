@@ -4,11 +4,14 @@ import {
 	getValueOrDefault,
 	fontString,
 } from './core.helpers';
-import Chart from './core';
 import Element from './core.element';
 import layoutService from './core.layoutService';
+import defaults from './core.defaults';
+import {
+	plugins
+} from './core.plugin';
 
-Chart.defaults.global.title = {
+defaults.global.title = {
 	display: false,
 	position: 'top',
 	fullWidth: true, // marks that this box should take the full width of the canvas (pushing down other boxes)
@@ -26,7 +29,7 @@ export default class Title extends Element {
 		super();
 		var me = this;
 		extend(me, config);
-		me.options = configMerge(Chart.defaults.global.title, config.options);
+		me.options = configMerge(defaults.global.title, config.options);
 
 		// Contains hit boxes for each dataset (in dataset order)
 		me.legendHitBoxes = [];
@@ -37,7 +40,7 @@ export default class Title extends Element {
 	beforeUpdate() {
 		var chartOpts = this.chart.options;
 		if (chartOpts && chartOpts.title) {
-			this.options = configMerge(Chart.defaults.global.title, chartOpts.title);
+			this.options = configMerge(defaults.global.title, chartOpts.title);
 		}
 	}
 	update(maxWidth, maxHeight, margins) {
@@ -117,7 +120,7 @@ export default class Title extends Element {
 	fit() {
 		var me = this,
 			opts = me.options,
-			globalDefaults = Chart.defaults.global,
+			globalDefaults = defaults.global,
 			display = opts.display,
 			fontSize = getValueOrDefault(opts.fontSize, globalDefaults.defaultFontSize),
 			minSize = me.minSize;
@@ -148,7 +151,7 @@ export default class Title extends Element {
 			ctx = me.ctx,
 			valueOrDefault = getValueOrDefault,
 			opts = me.options,
-			globalDefaults = Chart.defaults.global;
+			globalDefaults = defaults.global;
 
 		if (opts.display) {
 			var fontSize = valueOrDefault(opts.fontSize, globalDefaults.defaultFontSize),
@@ -191,7 +194,7 @@ export default class Title extends Element {
 }
 
 // Register the title plugin
-Chart.plugins.register({
+plugins.register({
 	beforeInit(chartInstance) {
 		var opts = chartInstance.options;
 		var titleOpts = opts.title;

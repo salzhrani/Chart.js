@@ -1,5 +1,9 @@
-import { getValueOrDefault } from '../core/core.helpers';
-import Chart from '../core/core';
+import {
+	getValueOrDefault
+} from '../core/core.helpers';
+import {
+	drawPoint
+} from '../core/core.canvasHelpers';
 import Element from '../core/core.element';
 import defaults from '../core/core.defaults';
 
@@ -72,6 +76,6 @@ export default class Point extends Element {
 		ctx.lineWidth = getValueOrDefault(vm.borderWidth, globalOpts.elements.point.borderWidth);
 		ctx.fillStyle = vm.backgroundColor || defaultColor;
 
-		Chart.canvasHelpers.drawPoint(ctx, pointStyle, radius, x, y);
+		drawPoint(ctx, pointStyle, radius, x, y);
 	}
 }
