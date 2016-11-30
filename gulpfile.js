@@ -90,7 +90,7 @@ function buildTask() {
 
  
   var bundled = browserify('./src/chart.js', { standalone: 'Chart' })
-    .transform("babelify", {presets: ["es2015"], plugins: ['transform-class-properties']})
+    .transform("babelify", {presets: ["es2015-loose"], plugins: ['transform-class-properties']})
     .plugin(collapse)
     .bundle()
     .pipe(source('Chart.bundle.js'))
@@ -104,7 +104,7 @@ function buildTask() {
     .pipe(gulp.dest(outDir));
 
   var nonBundled = browserify('./src/chart.js', { standalone: 'Chart' })
-    .transform("babelify", {presets: ["es2015"], plugins: ['transform-class-properties']})
+    .transform("babelify", {presets: ["es2015-loose"], plugins: ['transform-class-properties']})
     .ignore('moment')
     .plugin(collapse)
     .bundle()

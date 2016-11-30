@@ -375,9 +375,11 @@ function getBackgroundPoint(vm, size, alignment) {
 export default class Tooltip extends Element {
 	constructor(options) {
 		super(options);
+		this.initialize();
+	}
+	initialize() {
 		this._model = getBaseModel(this._options);
 	}
-
 	// Get the title
 	// Args are: (tooltipItem, data)
 	getTitle() {
