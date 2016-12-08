@@ -1,10 +1,6 @@
-'use strict';
+import Chart from '../core/core';
 
-module.exports = function(Chart) {
-
-	Chart.Bubble = function(context, config) {
-		config.type = 'bubble';
-		return new Chart(context, config);
-	};
-
+export default (context, config) => {
+	config.type = 'bubble';
+	return new Chart(context, config);
 };

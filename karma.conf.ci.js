@@ -1,3 +1,7 @@
+var babel = require('rollup-plugin-babel');
+var nodeResolve = require('rollup-plugin-node-resolve');
+var commonjs = require('rollup-plugin-commonjs');
+
 module.exports = function(config) {
 	var configuration = {
 		browsers: ['Firefox'],
@@ -7,13 +11,27 @@ module.exports = function(config) {
 				flags: ['--no-sandbox']
 			}
 		},
-		frameworks: ['browserify', 'jasmine'],
+		frameworks: ['jasmine'],
 		reporters: ['progress', 'html'],
 		preprocessors: {
-			'src/**/*.js': ['browserify']
+			'src/**/*.js': ['rollup']
 		},
-		browserify: {
-			debug: true
+		rollupPreprocessor: {
+			entry: './src/chart.js',
+			plugins: [
+				nodeResolve({jsnext: true, main: true}),
+				commonjs({
+					include: 'node_modules/**',
+				}),
+				babel({
+					// exclude: 'node_modules/**',
+					presets: [["es2015", {"loose": true, "modules": false }]],
+					plugins: ['transform-class-properties', 'external-helpers'],
+				}),
+			],
+			exports: 'named',
+			moduleName: 'Chartjs',
+			format: 'umd'
 		}
 	};
 

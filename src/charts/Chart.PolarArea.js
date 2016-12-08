@@ -1,11 +1,6 @@
-'use strict';
+import Chart from '../core/core';
 
-module.exports = function(Chart) {
-
-	Chart.PolarArea = function(context, config) {
-		config.type = 'polarArea';
-
-		return new Chart(context, config);
-	};
-
+export default (context, config) => {
+	config.type = 'polarArea';
+	return new Chart(context, config);
 };

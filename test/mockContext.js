@@ -1,5 +1,6 @@
 /* eslint guard-for-in: 1 */
 /* eslint camelcase: 1 */
+
 (function() {
 	// Code from http://stackoverflow.com/questions/4406864/html-canvas-unit-testing
 	var Context = function() {

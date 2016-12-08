@@ -19,6 +19,10 @@ var merge = require('merge-stream');
 var collapse = require('bundle-collapser/plugin');
 var argv  = require('yargs').argv
 var package = require('./package.json');
+var rollup = require('rollup-stream');
+var babel = require('rollup-plugin-babel');
+var nodeResolve = require('rollup-plugin-node-resolve');
+var commonjs = require('rollup-plugin-commonjs');
 
 var srcDir = './src/';
 var outDir = './dist/';
@@ -80,9 +84,25 @@ function bowerTask() {
 
 function buildTask() {
 
-  var bundled = browserify('./src/chart.js', { standalone: 'Chart' })
-    .plugin(collapse)
-    .bundle()
+  var bundled = rollup({
+      entry: './src/chart.js',
+      plugins: [
+        nodeResolve({ jsnext: true, main: true }),
+        commonjs({
+          include: 'node_modules/**',
+        }),
+        babel({
+          // exclude: 'node_modules/**',
+          presets: [["es2015", {"loose": true, "modules": false }]],
+          plugins: ['transform-class-properties', 'external-helpers'],
+        }),
+      ],
+      exports: 'named',
+      moduleName: 'Chart',
+      format: 'umd'
+    })
+    // .plugin(collapse)
+    // .bundle()
     .pipe(source('Chart.bundle.js'))
     .pipe(insert.prepend(header))
     .pipe(streamify(replace('{{ version }}', package.version)))
@@ -93,10 +113,27 @@ function buildTask() {
     .pipe(streamify(concat('Chart.bundle.min.js')))
     .pipe(gulp.dest(outDir));
 
-  var nonBundled = browserify('./src/chart.js', { standalone: 'Chart' })
-    .ignore('moment')
-    .plugin(collapse)
-    .bundle()
+  var nonBundled = rollup({
+      entry: './src/chart.js',
+      external: ['moment'],
+      plugins: [
+        nodeResolve({ jsnext: true, main: true, skip: ['moment'] }),
+        commonjs({
+          include: 'node_modules/**',
+        }),
+        babel({
+          // exclude: 'node_modules/**',
+          presets: [["es2015", {"loose": true, "modules": false }]],
+          plugins: ['transform-class-properties', 'external-helpers'],
+        }),
+      ],
+      exports: 'named',
+      moduleName: 'Chart',
+      format: 'umd'
+    })
+    // .ignore('moment')
+    // .plugin(collapse)
+    // .bundle()
     .pipe(source('Chart.js'))
     .pipe(insert.prepend(header))
     .pipe(streamify(replace('{{ version }}', package.version)))
